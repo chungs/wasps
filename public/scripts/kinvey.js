@@ -19,6 +19,27 @@
     };
 
     App.kinveyHelper = null;
+
+    /**
+     * Define application-domain entities and collections.
+     */
+    // Define the base entity. Not accessible from outside current scope.
+    var Entity = Kinvey.Entity.extend({
+	// Override constructor to use the OfflineStore. (Took this out.)
+	constructor: function(attr, collection) {
+	    Kinvey.Entity.prototype.constructor.call(this, attr, collection);
+	},
+
+	// Convenience shortcut for returning the last modified date.
+	added: function() {
+	    return this.getMetadata().lastModified();
+	}
+    });
+
+    // Reservation: _id, meal, user
+    App.reservationEntity = new Kinvey.Entity({}, 'reservations');
+    // Meal: _id, title
+    App.mealEntity = new Kinvey.Entity({}, 'meals');
     
     App.kinveyLogin = function( token, name ) {
         // Create a new user instance, and login using the Facebook oAuth token.
