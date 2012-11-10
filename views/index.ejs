@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
   <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type='text/javascript' src="http://learn.knockoutjs.com/Scripts/Lib/knockout-2.2.0.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
 
@@ -44,6 +46,7 @@
     <![endif]-->
   </head>
   <body>
+
     <div id="fb-root"></div>
     <script type="text/javascript">
       window.fbAsyncInit = function() {
@@ -108,7 +111,7 @@
         <p class="tagline">
           <%= app.name %>
         </p>&nbsp;
-	<button id="fb-logout" onclick="logout();" class="button">Log out</button>
+	<a href="#" id="fb-logout" onclick="logout();" class="facebook-button">Log out</a>
         
       <% } else { %>
       <div>
@@ -118,14 +121,47 @@
       <% } %>
     </header>
 
-    <section id="get-started">
-      <p>Welcome to your Facebook app, running on <span>heroku</span>!</p>
-      <a href="https://devcenter.heroku.com/articles/facebook" target="_top" class="button">Learn How to Edit This App</a>
-    </section>
-
     <% if (user) { %>
 
     <% } %>
+      <section>
+      <p>First name: <strong data-bind="text: firstName"></strong></p>
+<p>Last name: <strong data-bind="text: lastName"></strong></p>
+
+<p>First name: <input data-bind="value: firstName" /></p>
+<p>Last name: <input data-bind="value: lastName" /></p>
+
+<p>Full name: <strong data-bind="text: fullName"></strong></p>
+
+<button data-bind="click: capitalizeLastName">Go caps</button>
+      </section>
+        <script type='text/javascript'>
+            (function () { // Wrap in function to prevent accidental globals
+                if (location.protocol != "data:") {
+                    $(window).bind('hashchange', function () {
+                        window.parent.handleChildIframeUrlChange(location.hash) 
+                    });
+                }
+
+                // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+function AppViewModel() {
+    this.firstName = ko.observable("Bert");
+    this.lastName = ko.observable("Bertington");
+
+    this.fullName = ko.computed(function() {
+        return this.firstName() + " " + this.lastName();    
+    }, this);
+
+    this.capitalizeLastName = function() {
+        var currentVal = this.lastName();        // Read the current value
+        this.lastName(currentVal.toUpperCase()); // Write back a modified value
+    };    
+}
+
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());
+            })();
+        </script>
   </body>
 </html>
 
