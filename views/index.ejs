@@ -70,10 +70,12 @@
       };
 
       function logout() {
+        console.log('Trying to logout');
         FB.logout(function(response) {
           console.log('User is now logged out');
           window.location = window.location;
-      });
+        });
+      }
 
       // Load the SDK Asynchronously
       (function(d, s, id) {
@@ -93,8 +95,8 @@
         <h1>Welcome, <strong><%= user.name %></strong></h1>
         <p class="tagline">
           <%= app.name %>
-        </p>
-	<button id="fb-logout" onclick="logout()">Log out</button>
+        </p>&nbsp;
+	<button id="fb-logout" onclick="logout();" class="button">Log out</button>
         
       <% } else { %>
       <div>
@@ -112,6 +114,9 @@
     <% if (user) { %>
 
     <% } %>
+    
+    <script defer src="http://download.kinvey.com/js/kinvey-js-0.9.10.min.js"></script>
+    <script defer src="scripts/kinvey.js"></script>
   </body>
 </html>
 
