@@ -106,6 +106,7 @@
 
     <span data-bind="text: fullName"></span>
 
+    <script>
     function JoinEventViewModel() {
         var self = this;
         self.fname = ko.observable("Stephen")
@@ -116,6 +117,7 @@
     }
 
     ko.applyBindings(new JoinEventViewModel());
+    </script>
 
     <% if (user) { %>
 
