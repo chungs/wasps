@@ -122,70 +122,68 @@
     </header>
 
     <% if (user) { %>
-<h3>Meals</h3>
+<h2>Meals</h2>
 
 <form data-bind="submit: newMeal">
     New meal: <input data-bind="value: newMealText" placeholder="E.g. Chicken on Friday at 3" />
     <button type="submit">Add</button>
 </form>
-
+<br />
 <ul data-bind="foreach: meals, visible: meals().length > 0">
     <li>
-        <input type="checkbox" data-bind="checked: isDone" />
-        <input data-bind="value: title, disable: isDone" />
+        <span data-bind="value: title"></span>
+        <a href="#" data-bind="click: $parent.addReservation">Reserve spot</a>
         <a href="#" data-bind="click: $parent.removeMeal">Delete</a>
     </li> 
 </ul>
-
-You have <b data-bind="text: incompleteTasks().length">&nbsp;</b> incomplete task(s)
-<span data-bind="visible: incompleteTasks().length == 0"> - it's beer time!</span>
-
-<button data-bind="click: save">Save</button>
-        <script type='text/javascript'>
-            (function () { // Wrap in function to prevent accidental globals
+<script type='text/javascript'>
+(function () { // Wrap in function to prevent accidental globals
                 if (location.protocol != "data:") {
                     $(window).bind('hashchange', function () {
                         window.parent.handleChildIframeUrlChange(location.hash) 
                     });
                 }
 
-                function Meal(data) {
-    this.title = ko.observable(data.title);
-    this.isDone = ko.observable(data.isDone);
-}
+var Meal = function(data) {
+    var self = this;
+    self.title = ko.observable(data.title);
+    self.username = ko.observable(data.username);
+};
 
 function MealListViewModel() {
     // Data
     var self = this;
     self.meals = ko.observableArray([]);
     self.newMealText = ko.observable();
-    self.incompleteTasks = ko.computed(function() {
-        return ko.utils.arrayFilter(self.meals(), function(task) { return !task.isDone() });
-    });
 
     // Operations
     self.newMeal = function() {
-        self.meals.push(new Meal({ title: this.newMealText() }));
+        var meal = new Meal({title: this.newMealText(), username: App.kinveyHelper.username});
+        App.kinveyHelper.newMeal(this.newMealText(), function(entity)
+    {
+          meal.entity = entity;
+    });
+        self.meals.push(meal);
         self.newMealText("");
     };
     self.removeMeal = function(meal) { self.meals.destroy(task) };
-    self.save = function() {
-        $.ajax("/tasks", {
-            data: ko.toJSON({ tasks: self.meals }),
-            type: "post", contentType: "application/json",
-            success: function(result) { alert(result); }
-        });
-    }; 
-    
-    // Load initial state from server, convert it to Task instances, then populate self.tasks
-    $.getJSON("/tasks", function(allData) {
-        var mappedTasks = $.map(allData, function(item) { return new Task(item) });
-        self.tasks(mappedTasks);
-    }); 
+
+    // Load initial state from server
+    App.loadMeals(function(meals) {
+      var mappedMeals = $.map(meals, function(entity) {
+        console.log(entity.get('user'));
+        var meal = new Meal({title: entity.get('title'), username: "tmpUsername"});
+        meal.entity = entity;
+        return meal;
+      });
+      self.meals(mappedMeals);
+    });
 }
 
-ko.applyBindings(new TaskListViewModel());
+ko.applyBindings(new MealListViewModel());
             })();
+
+
         </script>
 
     <% } %>

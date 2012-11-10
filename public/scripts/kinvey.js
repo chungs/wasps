@@ -15,10 +15,41 @@
 
     var KinveyHelper = function(user) {
         this.user = user;
+	this.username = user.getIdentity().facebook.name;
         console.log(user.getIdentity());
+        this.newMeal = function(title, cb) {
+	    var meal = new Kinvey.Entity({
+		title: title
+	    }, 'meals');
+	    meal.set('user', user);
+	    console.log("new meal with user identity");
+	    console.log(meal.get('user').getIdentity());
+	    meal.save({
+		success: function(meal) {
+		    console.log("meal saved");
+		    cb(meal);
+		},
+		error: function(error) {
+		    console.log(error);
+		}
+	    });
+	};
     };
 
     App.kinveyHelper = null;
+
+    App.loadMeals = function(cb) {
+	var meals = new Kinvey.Collection('meals');
+	meals.fetch({
+	    success: function(list) {
+		cb(list);
+		console.log("meals fetched");
+	    },
+	    error: function(error) {
+		console.log(error);
+	    }
+	});
+    };
 
     /**
      * Define application-domain entities and collections.
