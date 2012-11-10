@@ -75,6 +75,7 @@
           console.log('User is now logged out');
           window.location = window.location;
         });
+        App.kinveyLogout();
       }
 
       // Load the SDK Asynchronously
@@ -85,8 +86,19 @@
         js.src = "//connect.facebook.net/en_US/all.js";
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
-    </script>
 
+    </script>
+    <script src="http://download.kinvey.com/js/kinvey-js-0.9.10.min.js"></script>
+    <script src="scripts/kinvey.js"></script>
+    <% if (user) { %>
+    <script type="text/javascript">
+      var App = window.App;
+      var accessToken = "<%= req.facebook.token %>";
+      var kinveyHelper = App.kinveyLogin( accessToken,
+                                          "<%= user.name %>");
+    </script>
+    <% } %>
+    
     <header class="clearfix">
       <% if (user) { %>
       <p id="picture" style="background-image: url(https://graph.facebook.com/<%= user.id %>/picture?type=normal)"></p>
@@ -114,9 +126,6 @@
     <% if (user) { %>
 
     <% } %>
-    
-    <script defer src="http://download.kinvey.com/js/kinvey-js-0.9.10.min.js"></script>
-    <script defer src="scripts/kinvey.js"></script>
   </body>
 </html>
 
