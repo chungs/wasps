@@ -26,6 +26,7 @@
     <meta property="fb:app_id" content="<%= app.id %>" />
 
     <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/knockout-2.2.0.js"</script>
 
     <script type="text/javascript">
       function logResponse(response) {
@@ -99,9 +100,22 @@
     </header>
 
     <section id="get-started">
-      <p>Carl's Jr. Fuck you, I'm eating. Welcome to your Facebook app, running on <span>heroku</span>!</p>
+      <p>Carl's Jr.: Fuck you, I'm eating. Welcome to Eat With Me, running on <span>heroku</span>!</p>
       <a href="https://devcenter.heroku.com/articles/facebook" target="_top" class="button">Learn How to Edit This App</a>
     </section>
+
+    <span data-bind="text: fullName"></span>
+
+    function JoinEventViewModel() {
+        var self = this;
+        self.fname = ko.observable("Stephen")
+        self.lname = ko.observable("Pon")
+        self.fullName = ko.computed(function() {
+            return this.fname() + " " + this.lname();
+        }, this);
+    }
+
+    ko.applyBindings(new JoinEventViewModel());
 
     <% if (user) { %>
 
