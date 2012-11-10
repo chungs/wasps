@@ -80,6 +80,20 @@
       }(document, 'script', 'facebook-jssdk'));
     </script>
 
+    <script>
+    function JoinEventViewModel() {
+        var self = this;
+        self.fname = ko.observable("Stephen")
+        self.lname = ko.observable("Pon")
+        self.fullName = ko.computed(function() {
+            return this.fname() + " " + this.lname();
+        }, this);
+    }
+
+    ko.applyBindings(new JoinEventViewModel());
+    </script>
+
+
     <header class="clearfix">
       <% if (user) { %>
       <p id="picture" style="background-image: url(https://graph.facebook.com/<%= user.id %>/picture?type=normal)"></p>
@@ -106,20 +120,6 @@
 
     <p><strong data-bind="text: fullName"></strong></p>
     <p data-bind="text: fname"></p>
-
-    <script>
-    function JoinEventViewModel() {
-        var self = this;
-        self.fname = ko.observable("Stephen")
-        self.lname = ko.observable("Pon")
-        self.fullName = ko.computed(function() {
-            return this.fname() + " " + this.lname();
-        }, this);
-    }
-
-    ko.applyBindings(new JoinEventViewModel());
-    </script>
-
     <% if (user) { %>
 
     <% } %>
