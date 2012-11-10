@@ -164,13 +164,13 @@ function MealListViewModel() {
         self.meals.push(meal);
         self.newMealText("");
     };
-    self.removeMeal = function(meal) { self.meals.destroy(task) };
+    self.removeMeal = function(meal) { self.meals.destroy(meal) };
 
     // Load initial state from server
     App.loadMeals(function(meals) {
       var mappedMeals = $.map(meals, function(entity) {
         console.log(entity.get('user'));
-        var meal = new Meal({title: entity.get('title'), username: "tmpUsername"});
+        var meal = new Meal({title: entity.get('title'), username: entity.get('user').get('_socialIdentity').facebook.name});
         meal.entity = entity;
         return meal;
       });

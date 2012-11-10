@@ -41,6 +41,7 @@
     App.loadMeals = function(cb) {
 	var meals = new Kinvey.Collection('meals');
 	meals.fetch({
+	    resolve: ['user'],
 	    success: function(list) {
 		cb(list);
 		console.log("meals fetched");
