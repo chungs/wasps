@@ -69,6 +69,12 @@
         FB.Canvas.setAutoGrow();
       };
 
+      function logout() {
+        FB.logout(function(response) {
+          console.log('User is now logged out');
+          window.location = window.location;
+      });
+
       // Load the SDK Asynchronously
       (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -88,7 +94,7 @@
         <p class="tagline">
           <%= app.name %>
         </p>
-
+	<button id="fb-logout" onclick="logout()">Log out</button>
         
       <% } else { %>
       <div>
