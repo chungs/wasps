@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
   <head>
-    <!--
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type='text/javascript' src="http://learn.knockoutjs.com/Scripts/Lib/knockout-2.2.0.js"></script>
-    -->
     <script type="text/javascript" src="/scripts/jquery.min.js"></script>
     <script type='text/javascript' src="/scripts/knockout-2.2.0.js"></script>
     <meta charset="utf-8" />
@@ -93,10 +89,8 @@
       }(document, 'script', 'facebook-jssdk'));
 
     </script>
-    <!--
-    <script src="http://download.kinvey.com/js/kinvey-js-0.9.10.min.js"></script>
-    -->
-    <script src="/scripts/kinvey-js-0.9.10.min.js"></script>
+    <script type="text/javascript" src="/scripts/kinvey-js-0.9.10.min.js"></script>
+    <script type="text/javascript" src="/scripts/kinvey.js"></script>
     <% if (user) { %>
     <script type="text/javascript">
       var App = window.App;
@@ -135,13 +129,13 @@
 <br />
 <ul data-bind="foreach: meals, visible: meals().length > 0">
     <li>
-        <span data-bind="value: title"></span>
+        <span data-bind="text: title"></span>&nbsp; by &nbsp;<span
+    data-bind="text: username"></span>&nbsp;
         <a href="#" data-bind="click: $parent.addReservation">Reserve spot</a>
         <a href="#" data-bind="click: $parent.removeMeal">Delete</a>
     </li> 
 </ul>
 <script type='text/javascript'>
-(function () { // Wrap in function to prevent accidental globals
                 if (location.protocol != "data:") {
                     $(window).bind('hashchange', function () {
                         window.parent.handleChildIframeUrlChange(location.hash) 
@@ -184,8 +178,8 @@ function MealListViewModel() {
     });
 }
 
-ko.applyBindings(new MealListViewModel());
-            })();
+var model = new MealListViewModel();
+ko.applyBindings(model);;
 
 
         </script>
