@@ -83,8 +83,8 @@
     <script>
     function JoinEventViewModel() {
         var self = this;
-        self.fname = ko.observable("Stephen")
-        self.lname = ko.observable("Pon")
+        self.fname = ko.observable("Stephen");
+        self.lname = ko.observable("Pon");
         self.fullName = ko.computed(function() {
             return this.fname() + " " + this.lname();
         }, this);
