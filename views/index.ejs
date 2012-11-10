@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
   <head>
+    <!--
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type='text/javascript' src="http://learn.knockoutjs.com/Scripts/Lib/knockout-2.2.0.js"></script>
+    -->
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type='text/javascript' src="/scripts/knockout-2.2.0.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
 
@@ -26,8 +30,6 @@
     <meta property="og:site_name" content="<%= app.name %>" />
     <meta property="og:description" content="My first app" />
     <meta property="fb:app_id" content="<%= app.id %>" />
-
-    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
 
     <script type="text/javascript">
       function logResponse(response) {
@@ -91,8 +93,10 @@
       }(document, 'script', 'facebook-jssdk'));
 
     </script>
+    <!--
     <script src="http://download.kinvey.com/js/kinvey-js-0.9.10.min.js"></script>
-    <script src="scripts/kinvey.js"></script>
+    -->
+    <script src="/scripts/kinvey-js-0.9.10.min.js"></script>
     <% if (user) { %>
     <script type="text/javascript">
       var App = window.App;
