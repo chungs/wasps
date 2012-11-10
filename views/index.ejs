@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#" lang="en">
+  <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type='text/javascript' src="http://learn.knockoutjs.com/Scripts/Lib/knockout-2.2.0.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+
+    <title><%= app.name %></title>
+    <link rel="stylesheet" href="stylesheets/screen.css" media="Screen" type="text/css" />
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)" type="text/css" />
+
+    <!--[if IEMobile]>
+    <link rel="stylesheet" href="mobile.css" media="screen" type="text/css"  />
+    <![endif]-->
+
+    <!-- These are Open Graph tags.  They add meta data to your  -->
+    <!-- site that facebook uses when your content is shared     -->
+    <!-- over facebook.  You should fill these tags in with      -->
+    <!-- your data.  To learn more about Open Graph, visit       -->
+    <!-- 'https://developers.facebook.com/docs/opengraph/'       -->
+    <meta property="og:title" content="<%= app.name %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= url() %>" />
+    <meta property="og:image" content="<%= url('/logo.png') %>" />
+    <meta property="og:site_name" content="<%= app.name %>" />
+    <meta property="og:description" content="My first app" />
+    <meta property="fb:app_id" content="<%= app.id %>" />
+
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+
+    <script type="text/javascript">
+      function logResponse(response) {
+        if (console && console.log) {
+          console.log('The response was', response);
+        }
+      }
+    </script>
+
+    <!--[if IE]>
+      <script type="text/javascript">
+        var tags = ['header', 'section'];
+        while(tags.length)
+          document.createElement(tags.pop());
+      </script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '<%= app.id %>', // App ID
+          channelUrl : '<%= url_no_scheme('/channel.html') %>', // Channel File
+          status     : true, // check login status
+          cookie     : true, // enable cookies to allow the server to access the session
+          xfbml      : true // parse XFBML
+        });
+
+        // Listen to the auth.login which will be called when the user logs in
+        // using the Login button
+        FB.Event.subscribe('auth.login', function(response) {
+          // We want to reload the page now so PHP can read the cookie that the
+          // Javascript SDK sat. But we don't want to use
+          // window.location.reload() because if this is in a canvas there was a
+          // post made to this page and a reload will trigger a message to the
+          // user asking if they want to send data again.
+          window.location = window.location;
+        });
+
+        FB.Canvas.setAutoGrow();
+      };
+
+      function logout() {
+        console.log('Trying to logout');
+        FB.logout(function(response) {
+          console.log('User is now logged out');
+          window.location = window.location;
+        });
+        App.kinveyLogout();
+      }
+
+      // Load the SDK Asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+    </script>
+    <script src="http://download.kinvey.com/js/kinvey-js-0.9.10.min.js"></script>
+    <script src="scripts/kinvey.js"></script>
+    <% if (user) { %>
+    <script type="text/javascript">
+      var App = window.App;
+      var accessToken = "<%= req.facebook.token %>";
+      var kinveyHelper = App.kinveyLogin( accessToken,
+                                          "<%= user.name %>");
+    </script>
+    <% } %>
+    
+    <header class="clearfix">
+      <% if (user) { %>
+      <p id="picture" style="background-image: url(https://graph.facebook.com/<%= user.id %>/picture?type=normal)"></p>
+
+      <div>
+        <h1>Welcome, <strong><%= user.name %></strong></h1>
+        <p class="tagline">
+          <%= app.name %>
+        </p>&nbsp;
+	<a href="#" id="fb-logout" onclick="logout();" class="facebook-button">Log out</a>
+        
+      <% } else { %>
+      <div>
+        <h1>Welcome</h1>
+        <div class="fb-login-button" data-scope="user_likes,user_photos"></div>
+      </div>
+      <% } %>
+    </header>
+
+    <% if (user) { %>
+<h3>Meals</h3>
+
+<form data-bind="submit: newMeal">
+    New meal: <input data-bind="value: newMealText" placeholder="E.g. Chicken on Friday at 3" />
+    <button type="submit">Add</button>
+</form>
+
+<ul data-bind="foreach: meals, visible: meals().length > 0">
+    <li>
+        <input type="checkbox" data-bind="checked: isDone" />
+        <input data-bind="value: title, disable: isDone" />
+        <a href="#" data-bind="click: $parent.removeMeal">Delete</a>
+    </li> 
+</ul>
+
+You have <b data-bind="text: incompleteTasks().length">&nbsp;</b> incomplete task(s)
+<span data-bind="visible: incompleteTasks().length == 0"> - it's beer time!</span>
+
+<button data-bind="click: save">Save</button>
+        <script type='text/javascript'>
+            (function () { // Wrap in function to prevent accidental globals
+                if (location.protocol != "data:") {
+                    $(window).bind('hashchange', function () {
+                        window.parent.handleChildIframeUrlChange(location.hash) 
+                    });
+                }
+
+                function Meal(data) {
+    this.title = ko.observable(data.title);
+    this.isDone = ko.observable(data.isDone);
+}
+
+function MealListViewModel() {
+    // Data
+    var self = this;
+    self.meals = ko.observableArray([]);
+    self.newMealText = ko.observable();
+    self.incompleteTasks = ko.computed(function() {
+        return ko.utils.arrayFilter(self.meals(), function(task) { return !task.isDone() });
+    });
+
+    // Operations
+    self.newMeal = function() {
+        self.meals.push(new Meal({ title: this.newMealText() }));
+        self.newMealText("");
+    };
+    self.removeMeal = function(meal) { self.meals.destroy(task) };
+    self.save = function() {
+        $.ajax("/tasks", {
+            data: ko.toJSON({ tasks: self.meals }),
+            type: "post", contentType: "application/json",
+            success: function(result) { alert(result); }
+        });
+    }; 
+    
+    // Load initial state from server, convert it to Task instances, then populate self.tasks
+    $.getJSON("/tasks", function(allData) {
+        var mappedTasks = $.map(allData, function(item) { return new Task(item) });
+        self.tasks(mappedTasks);
+    }); 
+}
+
+ko.applyBindings(new TaskListViewModel());
+            })();
+        </script>
+
+    <% } %>
+
+  </body>
+</html>
+
