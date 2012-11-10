@@ -109,7 +109,7 @@
         <p class="tagline">
           <%= app.name %>
         </p>&nbsp;
-	<a href="#" id="fb-logout" onclick="logout();" class="facebook-button">Log out</a>
+	<a href="" id="fb-logout" onclick="logout();" class="facebook-button">Log out</a>
         
       <% } else { %>
       <div>
@@ -136,11 +136,6 @@
     </li> 
 </ul>
 <script type='text/javascript'>
-                if (location.protocol != "data:") {
-                    $(window).bind('hashchange', function () {
-                        window.parent.handleChildIframeUrlChange(location.hash) 
-                    });
-                }
 
 var Meal = function(data) {
     var self = this;
